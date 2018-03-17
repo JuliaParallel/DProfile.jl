@@ -89,4 +89,24 @@ function init(args...;kwargs...)
     end
 end
 
+function save(file)
+    open(file, "w") do io
+        serialize(io, DProfile.samples)
+        serialize(io, DProfile.dict)
+    end
 end
+
+function load(file)
+    open(file, "r") do io
+        if !isempty(samples)
+            warn("Overwriting previous samples")
+        end
+        empty!(DProfile.samples)
+        merge!(DProfile.samples, deserialize(io))
+        empty!(DProfile.dict)
+        merge!(DProfile.dict, deserialize(io))
+        nothing
+    end
+end
+
+end # module
